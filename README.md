@@ -1,15 +1,24 @@
 
 # VimNotes
 
-Goals:
+## Goals
 
-build the best note taking app for me
+Build the best note taking app for me
 
-* matches the featureset I've been using in icloud notes
-* works well on browsers
-* uses vim as the editor
-* saves history
-* encrypts files on the browser
-* works offline
+* Matches the featureset I've been using in icloud notes
+* Works well on browsers
+* Uses vim as the editor
+* Saves history
+* Encrypts files on the browser
+* Works offline
+
+
+## Install
+
+1. Clone es-vim.js into root
+2. Run a static webserver on root
+3. Go to index.html
+
+## Other
 
 See /TODO for progress
