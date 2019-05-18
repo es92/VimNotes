@@ -1,0 +1,93 @@
+========================================================
+
+----    1. load file on launch
+----    2. save file on events
+----      a. hook up events
+----      b. write file to localstorage
+----    3. add gui
+----    4. show file on click
+----    5. autosave edited files
+----      a. create random filename on launch
+----      b. autosave on edit
+----      c. display first nonempty lines in list
+----    6. support custom vimrc
+----    7. sort by timestamp
+        8. load / saving folders
+----      a. basic functionality
+          b. drag items to trash to delete (remove x)
+          c. drag items to rearrange folders
+        9. load / save to external db
+        10. multiple windows editing different documents
+        11. clipboard
+        12. fix graphical issues
+        13. add alternative editor for phone
+
+========================================================
+
+show file on click
+
+see
+/mnt/share/Dropbox/projects/old/es-context/client/vimEditor.js
+/mnt/share/Dropbox/projects/old/es-context/client/wrappedVim.js
+
+========================================================
+
+----    1. load file on launch
+----    2. save file on events
+----      a. hook up events
+----      b. write file to localstorage
+----    3. add gui
+----    4. show file on click
+        5. load / saving multiple files
+        6. load / save to external db
+
+========================================================
+
+decide on GUI
+  (copy apple notes?)
+
+========================================================
+
+see es-vim.js/web/eventfs.js
+
+1. load files on launch
+2. save files on events
+  a. hook up events
+  b. write files to localstorage
+
+========================================================
+
+2. switch that vim to use a BrowserFS instead of NodeFS
+3. fire events when that NodeFS is modified
+4. push/pull localstorage files from a remote server
+6. add login
+5. push/pull localstorage files from a remote server with merging
+6. add offline support
+7. add alternative editor for on phone
+
+========================================================
+
+1. pull in es-vim.js 
+2. switch that vim to use a BrowserFS instead of NodeFS
+3. fire events when that NodeFS is modified
+4. push/pull localstorage files from a remote server
+6. add login
+5. push/pull localstorage files from a remote server with merging
+6. add offline support
+7. add alternative editor for on phone
+
+========================================================
+
+1. learn how remote_linux did loading / saving
+  - findings:
+    - there was a NODEFS module for when emscripten is compiled to js to use local fs
+    - I had replaced NODEFS calls to fs with synchronous calls to fs through the filesystem
+
+2. load / save to localstorage fs
+3. load / save to remote fs
+4. load / save to remote fs with login
+5. load / save to remote fs with login + encryption
+6. add alternative editor for on phone
+7. add offline support with version reintegration
+
+========================================================

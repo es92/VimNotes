@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Vim.js</title>
+    <link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Source+Code+Pro'>
+    <style>
+      html, body {
+        height: 100%;
+
+      }
+
+       * {
+         margin: 0;
+         padding: 0;
+
+       }
+
+      .panes {
+        width: 100%;
+        height: 100%;
+      }
+
+      .files {
+        width: 20rem;
+        height: 100%;
+        display: inline-block;
+        float: left;
+        overflow: hidden;
+      }
+
+      canvas {
+        position: 'absolute';
+        width: 100%;
+        height: 100%;
+      }
+
+      .canvas-parent {
+        width: calc(100% - 20rem);
+        height: 100%;
+        display: inline-block;
+        float: right;
+        overflow: hidden;
+      }
+
+      .files .header {
+        height: 3rem;
+        border-bottom: 1px solid #aaa;
+      }
+
+      .files .list *.elem {
+        padding: .5rem;
+        border-bottom: 1px solid #aaa;
+      }
+
+      .files .selected {
+        background: #eee;
+      }
+
+      .files .header .newfile, .files .header .newfolder {
+        display: inline-block;
+        float: right;
+        font-size: 2rem;
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+        padding-right: .5rem;
+        padding-left: .5rem;
+      }
+
+      .files .header .title {
+        display: inline-block;
+        float: left;
+        font-family: helvetica;
+        letter-spacing: .1rem;
+        font-size: 1.5rem;
+        padding: .75rem;
+      }
+
+      .files .header .newfile:hover, .files .header .newfolder:hover {
+        background: #eee;
+      }
+
+      .files .header .newfile:active, .files .header .newfolder:active {
+        background: #ddd;
+      }
+
+      .files .list *.selectable:not(.selected):hover {
+        background: #f8f8f8;
+      }
+
+      .files .list *.selectable:not(.selected):active,
+      .files .list *.selectable.selected:active {
+        background: #ddd;
+      }
+
+      .files .list *.selectable.selected:active {
+        background: #ddd;
+      }
+
+      .files .listpost {
+        width: 100%;
+        height: 100%;
+      }
+
+      .files .list .parent {
+        padding: 0;
+      }
+
+      .files .list .parent > * {
+        margin-left: 3rem;
+      }
+
+      .files .list .folder > * {
+        display: inline-block;
+      }
+
+      .files .list .folder > *:nth-child(2),
+      .files .list .folder > *:nth-child(3),
+      .files .list .folder > *:nth-child(4) {
+        float: right;
+        margin-top: -.25rem;
+        padding: .25rem;
+        filter: grayscale(50%);
+        opacity: 0.50;
+      }
+
+      .files .list .folder > *:nth-child(4) {
+        padding: .375rem;
+        font-size: .75rem;
+      }
+
+      .files .list .folder > *:nth-child(2):hover,
+      .files .list .folder > *:nth-child(3):hover,
+      .files .list .folder > *:nth-child(4):hover {
+        filter: none;
+        opacity: 1.0;
+      }
+
+      .files .list .folder > *:nth-child(2) {
+        margin-right: -.25rem;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="panes">
+      <div class="files">
+        <div class="header">
+          <div class="title">VimNotes</div>
+          <div class="newfile">📝</div>
+          <div class="newfolder">📁</div>
+        </div>
+        <div class="list">
+        </div>
+        <div class="listpost"></div>
+      </div>
+      <div class="canvas-parent">
+        <canvas width=800 height=400 tabindex='1'></canvas>
+      </div>
+    </div>
+
+
+    <script src="es-vim.js/web/vim_loader.js"></script>
+    <script src="es-vim.js/web/ww_bridge.js"></script>
+    <script src="es-vim.js/web/em_vim.js"></script>
+    <script src="es-vim.js/web/vim_canvas_ui.js"></script>
+    <script src="main.js"></script>
+    <script src="files.js"></script>
+    <script src="evented.js"></script>
+    <script src="filedb.js"></script>
+
+  </body>
+</html>
+
