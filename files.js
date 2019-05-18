@@ -36,10 +36,125 @@ function make_files(files_div, selected_file, root_folder) {
   mk_newfile();
   mk_newfolder();
 
-  var div = files_div.querySelector('.listpost');
-  div.onclick = () => {
+  var drag = {
+    x: 0,
+    y: 0,
+    startX: 0,
+    startY: 0,
+    dragging: false,
+    enabled: false,
+    div: null,
+    clone: null,
+  }
 
-  };
+  function mk_draggable(div) {
+
+    div.onmousedown = (e) => {
+      document.body.classList.add('dragging');
+      drag.dragging = true;
+      drag.x = e.clientX;
+      drag.y = e.clientY;
+      drag.enabled = false;
+      drag.target_folder = null;
+
+      drag.div = div;
+
+      drag.clone = div.cloneNode(true);
+      drag.clone.style.position = 'absolute';
+      drag.clone.style.zIndex = 1000;
+      drag.clone.style.left = div.offsetLeft + 'px';
+      drag.clone.style.top = div.offsetTop + 'px';
+
+      var style = window.getComputedStyle(div);
+      var height = style.getPropertyValue("height");
+      var width = style.getPropertyValue("width");
+
+      drag.clone.style.width = width;
+      drag.clone.style.height = height;
+
+    }
+  }
+
+  function find_child_folder(parent, x, y) {
+    var folder = null;
+    Array.from(parent.children).forEach((c) => {
+      var r = c.getBoundingClientRect();
+      if (r.top <= y && r.bottom >= y) {
+        if (c.uid != null) {
+          folder = c;
+        } else {
+          var subfolder = find_child_folder(c, x, y);
+          if (subfolder != null) {
+            folder = subfolder;
+          } else {
+            if (c.previousSibling != null && c.previousSibling.uid != null) {
+              folder = c.previousSibling;
+            }
+          }
+        }
+      }
+    });
+    return folder;
+  }
+
+  window.onmouseup = () => {
+    if (drag.dragging) {
+      drag.dragging = false;
+      document.body.classList.remove('dragging');
+      if (drag.enabled) {
+        document.body.removeChild(drag.clone);
+        if (drag.target_folder != null) {
+          drag.target_folder.classList.remove('selected');
+        }
+
+        var drag_uid;
+        if (drag.target_folder == null) {
+          drag_uid = root_folder;
+        } else {
+          drag_uid = drag.target_folder.uid;
+        }
+        o.e.emit('move', drag.div.fname, drag_uid);
+      }
+    }
+  }
+
+  window.onmousemove = (e) => {
+    if (drag.dragging) {
+      var dx = e.clientX - drag.x;
+      var dy = e.clientY - drag.y;
+
+      if (!drag.enabled) {
+        if (Math.sqrt(dx**2 + dy**2) > 5) {
+          drag.enabled = true;
+          document.body.append(drag.clone);
+        }
+      }
+
+      if (drag.enabled) {
+
+        var child_folder = find_child_folder(list_div, e.clientX, e.clientY);
+        var last_target_folder = drag.target_folder;
+        if (child_folder == null) {
+          drag.target_folder = null;
+        } else if (child_folder.uid != null) {
+          drag.target_folder = child_folder;
+        }
+        if (drag.target_folder != last_target_folder && last_target_folder != null) {
+          last_target_folder.classList.remove('selected');
+        }
+        if (drag.target_folder != null) {
+          drag.target_folder.classList.add('selected');
+        }
+
+
+        drag.x = e.clientX;
+        drag.y = e.clientY;
+
+        drag.clone.style.left = (drag.clone.offsetLeft + dx) + "px";
+        drag.clone.style.top = (drag.clone.offsetTop + dy) + "px";
+      }
+    }
+  }
 
   function render_files(fdb) {
     list_div.innerHTML = '';
@@ -58,8 +173,9 @@ function make_files(files_div, selected_file, root_folder) {
           o.e.emit('change', e.target.fname);
           render_files(fdb);
         }
-        div.classList.add('elem');
+        div.classList.add('list-elem');
         div.classList.add('selectable');
+        mk_draggable(div);
         return div;
       }
 
@@ -76,7 +192,7 @@ function make_files(files_div, selected_file, root_folder) {
         }
         title.onkeypress = (e) => {
           if (e.which === 13) {
-            e.preventDefault();// to prevent the default enter functionality
+            e.preventDefault();
             title.blur();            
           }
         }
@@ -114,7 +230,7 @@ function make_files(files_div, selected_file, root_folder) {
         div.append(deletefolder);
 
         div.uid = uid;
-        div.classList.add('elem');
+        div.classList.add('list-elem');
         div.classList.add('folder');
 
         var child = null;

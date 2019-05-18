@@ -97,4 +97,9 @@ var filedb = {
     fdb.folders[Math.random()] = { name: fname, parent: parent, last_edit: Date.now() };
   },
 
+  move_file(fdb, fname, folderuid) {
+    fdb.files[fname].parent = folderuid;
+
+  }
+
 }

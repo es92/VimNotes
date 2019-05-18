@@ -15,7 +15,8 @@
         8. load / saving folders
 ----      a. basic functionality
           b. drag items to trash to delete (remove x)
-          c. drag items to rearrange folders
+----      c. drag files
+          d. drag folders
         9. load / save to external db
         10. multiple windows editing different documents
         11. clipboard

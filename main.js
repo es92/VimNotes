@@ -65,6 +65,13 @@ window.onload = function(){
           filesui.render_files(fdb);
         });
 
+        filesui.e.on('move', (fname, folderuid) => {
+          filedb.move_file(fdb, fname, folderuid);
+          filedb.save_localstorage(fdb);
+          filesui.render_files(fdb);
+
+        });
+
         var canvas = document.getElementsByTagName('canvas')[0];
         var vc = new VimCanvas(vimjs, canvas);
         window.vc = vc;
