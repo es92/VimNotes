@@ -57,7 +57,11 @@ canvas {
   border-bottom: 1px solid #aaa;
 }
 
-.list-elem.selected {
+.list-elem {
+  background: white;
+}
+
+.selected {
   background: #eee;
 }
 
@@ -86,11 +90,6 @@ canvas {
 
 .files .header .newfile:active, .files .header .newfolder:active {
   background: #ddd;
-}
-
-.list-elem {
-  background: white;
-
 }
 
 .list-elem.selectable:not(.selected):hover {

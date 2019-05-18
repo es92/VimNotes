@@ -105,6 +105,8 @@ function make_files(files_div, selected_file, root_folder) {
         document.body.removeChild(drag.clone);
         if (drag.target_folder != null) {
           drag.target_folder.classList.remove('selected');
+        } else {
+          header_div.classList.remove('selected');
         }
 
         var drag_uid;
@@ -139,11 +141,18 @@ function make_files(files_div, selected_file, root_folder) {
         } else if (child_folder.uid != null) {
           drag.target_folder = child_folder;
         }
-        if (drag.target_folder != last_target_folder && last_target_folder != null) {
-          last_target_folder.classList.remove('selected');
+        if (drag.target_folder != last_target_folder) {
+          if (last_target_folder != null) {
+            last_target_folder.classList.remove('selected');
+          } else {
+            header_div.classList.remove('selected');
+          }
         }
+          
         if (drag.target_folder != null) {
           drag.target_folder.classList.add('selected');
+        } else {
+          header_div.classList.add('selected');
         }
 
 
