@@ -12,6 +12,33 @@
 ----      c. display first nonempty lines in list
 ----    6. support custom vimrc
 ----    7. sort by timestamp
+----    8. load / saving folders
+----      a. basic functionality
+----      c. drag files
+----      d. drag folders
+        9. drag items to trash to delete (remove x)
+        10. load / save to external db
+        11. multiple windows editing different documents
+        12. clipboard
+        13. fix graphical issues
+        14. add alternative editor for phone
+        15. add encryption
+        16. offline support
+
+========================================================
+
+----    1. load file on launch
+----    2. save file on events
+----      a. hook up events
+----      b. write file to localstorage
+----    3. add gui
+----    4. show file on click
+----    5. autosave edited files
+----      a. create random filename on launch
+----      b. autosave on edit
+----      c. display first nonempty lines in list
+----    6. support custom vimrc
+----    7. sort by timestamp
         8. load / saving folders
 ----      a. basic functionality
           b. drag items to trash to delete (remove x)
