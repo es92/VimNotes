@@ -43,13 +43,15 @@ function make_files(files_div, selected_file, root_folder) {
     startY: 0,
     dragging: false,
     enabled: false,
+    folder_uid: null,
     div: null,
+    folder_uid: null,
     clone: null,
   }
 
-  function mk_draggable(div) {
+  function mk_draggable(click_div, div, folder_uid) {
 
-    div.onmousedown = (e) => {
+    click_div.onmousedown = (e) => {
       document.body.classList.add('dragging');
       drag.dragging = true;
       drag.x = e.clientX;
@@ -64,6 +66,7 @@ function make_files(files_div, selected_file, root_folder) {
       drag.clone.style.zIndex = 1000;
       drag.clone.style.left = div.offsetLeft + 'px';
       drag.clone.style.top = div.offsetTop + 'px';
+      drag.folder_uid = folder_uid;
 
       var style = window.getComputedStyle(div);
       var height = style.getPropertyValue("height");
@@ -80,15 +83,17 @@ function make_files(files_div, selected_file, root_folder) {
     Array.from(parent.children).forEach((c) => {
       var r = c.getBoundingClientRect();
       if (r.top <= y && r.bottom >= y) {
-        if (c.uid != null) {
+        if (c.uid != null && drag.folder_uid != c.uid) {
           folder = c;
         } else {
-          var subfolder = find_child_folder(c, x, y);
-          if (subfolder != null) {
-            folder = subfolder;
-          } else {
-            if (c.previousSibling != null && c.previousSibling.uid != null) {
-              folder = c.previousSibling;
+          if (c.previousSibling == null || c.previousSibling.uid == null || (drag.folder_uid != c.previousSibling.uid)) {
+            var subfolder = find_child_folder(c, x, y);
+            if (subfolder != null) {
+              folder = subfolder;
+            } else {
+              if (c.previousSibling != null && c.previousSibling.uid != null && drag.folder_uid != c.previousSibling.uid) {
+                folder = c.previousSibling;
+              }
             }
           }
         }
@@ -115,7 +120,11 @@ function make_files(files_div, selected_file, root_folder) {
         } else {
           drag_uid = drag.target_folder.uid;
         }
-        o.e.emit('move', drag.div.fname, drag_uid);
+        if (drag.folder_uid != null) {
+          o.e.emit('move_folder', drag.folder_uid, drag_uid);
+        } else {
+          o.e.emit('move_file', drag.div.fname, drag_uid);
+        }
       }
     }
   }
@@ -184,7 +193,8 @@ function make_files(files_div, selected_file, root_folder) {
         }
         div.classList.add('list-elem');
         div.classList.add('selectable');
-        mk_draggable(div);
+        div.classList.add('clickable');
+        mk_draggable(div, div);
         return div;
       }
 
@@ -249,7 +259,17 @@ function make_files(files_div, selected_file, root_folder) {
           child.classList.add('parent');
         }
 
-        return [ div, child ];
+        var container = document.createElement('div');
+        container.append(div);
+        if (child != null) {
+          container.append(child);
+        }
+
+        div.classList.add('clickable');
+
+        mk_draggable(div, container, div.uid);
+
+        return container;
       }
 
       filedb.foldercontents(fdb, fuid).forEach((f) => {
@@ -258,11 +278,8 @@ function make_files(files_div, selected_file, root_folder) {
           child = make_listfile(f.uid);
           div.append(child);
         } else if (f.type == 'folder') {
-          var [ header, child ] = make_listfolder(f.uid);
-          div.append(header);
-          if (child != null) {
-            div.append(child);
-          }
+          child = make_listfolder(f.uid);
+          div.append(child);
         } else {
           throw new Error('nyi');
         }

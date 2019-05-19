@@ -99,7 +99,10 @@ var filedb = {
 
   move_file(fdb, fname, folderuid) {
     fdb.files[fname].parent = folderuid;
-
-  }
+  },
+  
+  move_folder(fdb, src, folderuid) {
+    fdb.folders[src].parent = folderuid;
+  },
 
 }

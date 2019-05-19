@@ -65,11 +65,16 @@ window.onload = function(){
           filesui.render_files(fdb);
         });
 
-        filesui.e.on('move', (fname, folderuid) => {
+        filesui.e.on('move_file', (fname, folderuid) => {
           filedb.move_file(fdb, fname, folderuid);
           filedb.save_localstorage(fdb);
           filesui.render_files(fdb);
+        });
 
+        filesui.e.on('move_folder', (fuid, folderuid) => {
+          filedb.move_folder(fdb, fuid, folderuid);
+          filedb.save_localstorage(fdb);
+          filesui.render_files(fdb);
         });
 
         var canvas = document.getElementsByTagName('canvas')[0];

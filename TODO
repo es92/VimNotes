@@ -16,7 +16,7 @@
 ----      a. basic functionality
           b. drag items to trash to delete (remove x)
 ----      c. drag files
-          d. drag folders
+----      d. drag folders
         9. load / save to external db
         10. multiple windows editing different documents
         11. clipboard
