@@ -6,6 +6,7 @@ function make_files(files_div, selected_file, root_folder) {
 
   list_div = files_div.querySelector('.list');
   header_div = files_div.querySelector('.header');
+  trash_div = files_div.querySelector('.trash');
 
   function summary(contents) {
     if (contents.trim() == '') {
@@ -108,22 +109,34 @@ function make_files(files_div, selected_file, root_folder) {
       document.body.classList.remove('dragging');
       if (drag.enabled) {
         document.body.removeChild(drag.clone);
+
         if (drag.target_folder != null) {
           drag.target_folder.classList.remove('selected');
         } else {
           header_div.classList.remove('selected');
         }
 
-        var drag_uid;
-        if (drag.target_folder == null) {
-          drag_uid = root_folder;
+        if (trash_div.classList.contains('active')) {
+          trash_div.classList.remove('active');
+
+          if (drag.folder_uid != null) {
+            o.e.emit('delete_folder', drag.folder_uid);
+          } else {
+            o.e.emit('delete_file', drag.div.fname);
+          }
+
         } else {
-          drag_uid = drag.target_folder.uid;
-        }
-        if (drag.folder_uid != null) {
-          o.e.emit('move_folder', drag.folder_uid, drag_uid);
-        } else {
-          o.e.emit('move_file', drag.div.fname, drag_uid);
+          var drag_uid;
+          if (drag.target_folder == null) {
+            drag_uid = root_folder;
+          } else {
+            drag_uid = drag.target_folder.uid;
+          }
+          if (drag.folder_uid != null) {
+            o.e.emit('move_folder', drag.folder_uid, drag_uid);
+          } else {
+            o.e.emit('move_file', drag.div.fname, drag_uid);
+          }
         }
       }
     }
@@ -164,9 +177,15 @@ function make_files(files_div, selected_file, root_folder) {
           header_div.classList.add('selected');
         }
 
-
         drag.x = e.clientX;
         drag.y = e.clientY;
+
+        var r = trash_div.getBoundingClientRect();
+        if (r.top <= drag.y && r.bottom >= drag.y && r.left <= drag.x && r.right >= drag.x) {
+          trash_div.classList.add('active');
+        } else {
+          trash_div.classList.remove('active');
+        }
 
         drag.clone.style.left = (drag.clone.offsetLeft + dx) + "px";
         drag.clone.style.top = (drag.clone.offsetTop + dy) + "px";

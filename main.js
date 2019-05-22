@@ -55,6 +55,15 @@ window.onload = function(){
           filesui.render_files(fdb);
         });
 
+        filesui.e.on('delete_file', (fname) => {
+          if (fname == user_vim_path) {
+            return;
+          }
+          filedb.deleteFile(fdb, fname);
+          filedb.save_localstorage(fdb);
+          filesui.render_files(fdb);
+        });
+
         filesui.e.on('redraw', () => {
           filesui.render_files(fdb);
         });

@@ -89,6 +89,10 @@ var filedb = {
     deleted.forEach(filedb.deleteFolder.bind(null, fdb));
   },
 
+  deleteFile(fdb, fname) {
+    delete fdb.files[fname];
+  },
+
   createFile(fdb, fname, parent) {
     fdb.files[fname] = { contents: '', parent: parent, last_edit: Date.now() };
   },

@@ -16,14 +16,15 @@
 ----      a. basic functionality
 ----      c. drag files
 ----      d. drag folders
-        9. drag items to trash to delete (remove x)
+----    9. drag items to trash to delete
         10. load / save to external db
         11. multiple windows editing different documents
         12. clipboard
         13. fix graphical issues
-        14. add alternative editor for phone
+        14. add alternative editor for mobile
         15. add encryption
         16. offline support
+        17. redo delete file so it works on mobile
 
 ========================================================
 
