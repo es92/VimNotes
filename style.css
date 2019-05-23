@@ -45,6 +45,7 @@ canvas {
   display: inline-block;
   float: left;
   overflow: hidden;
+  position: relative;
 }
 
 .files .header {
@@ -117,6 +118,23 @@ canvas {
 }
 
 .files .trash.active {
+  filter: none;
+  opacity: 1.0;
+}
+
+.files .network {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  padding: 1rem;
+  font-size: 2rem;
+  filter: grayscale(50%);
+  opacity: 0.10;
+  width: 2rem;
+}
+
+.files .network.active {
   filter: none;
   opacity: 1.0;
 }

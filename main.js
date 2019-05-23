@@ -10,6 +10,7 @@ window.onload = function(){
   var $ = document.querySelectorAll.bind(document);
 
   var files_div = $(".files")[0];
+  var network_div = $(".network")[0];
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "/vimrc", true);
@@ -18,8 +19,8 @@ window.onload = function(){
     vimjs.load(function(start){
       vimjs.load_eventfs(() => {
 
-        var backend = localstorage_backend.init();
-        //var backend = dropbox_backend.init();
+        //var backend = localstorage_backend.init();
+        var backend = dropbox_backend.init();
 
         filedb.load(user_vim_path, backend).then((fdb) => {
 
@@ -38,11 +39,21 @@ window.onload = function(){
           }
 
           var save_lpq = LPQ.init();
+          LPQ.set_on_done(save_lpq, () => {
+            network_div.classList.remove('active');
+            window.onbeforeunload = null;
+          });
 
           function save_and_render() {
+            filesui.render_files(fdb);
+            console.log('UPLOADING');
+            window.onbeforeunload = function() {
+              return true;
+            }
+
+            network_div.classList.add('active');
             LPQ.add(save_lpq, (done) => {
               filedb.save(fdb, backend).then(() => {
-                filesui.render_files(fdb);
                 done();
               });
             });

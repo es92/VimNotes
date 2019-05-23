@@ -4,13 +4,20 @@ var LPQ = {
   init() {
     return {
       todo: [],
-      running: false
+      running: false,
+      on_done: null,
     };
+  },
+  set_on_done(lpq, on_done) {
+    lpq.on_done = on_done;
   },
   add(lpq, fn) {
     var finished = () => {
       if (lpq.todo.length == 0) {
         lpq.running = false;
+        if (lpq.on_done != null) {
+          lpq.on_done();
+        }
       } else {
         lpq.todo.shift()(finished);
       }

@@ -4,31 +4,30 @@ var dropbox_backend = {
   init() {
     var dbx = new Dropbox.Dropbox({ accessToken: localStorage.accessToken });
 
-    var buffer = 'test_buf';
-
     var path = '/fdb.db';
 
-    //dbx.filesUpload({path: path, contents: buffer})
-    //  .then(function (response) {
-    //      dbx.filesListFolder({path: ''})
-    //      .then(function(response) {
-    //          console.log(response);
-    //          })
-    //      .catch(function(error) {
-    //          console.log(error);
-    //          });
-    //      })
-    //.catch(function (error) {
-    //    console.error('dropbox error', error)
-    //    })
 
 
 
     return {
       save(fdb) {
         return new Promise((resolve) => {
-          console.log('save');
 
+          var buffer = JSON.stringify(fdb);
+
+          dbx.filesUpload({path: path, contents: buffer, mode: 'overwrite'})
+          .then(function (response) {
+            dbx.filesListFolder({path: ''})
+            .then(function(response) {
+              resolve();
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+          })
+          .catch(function (error) {
+            console.error('dropbox error', error)
+          })
         });
       },
       load(default_fdb) {
