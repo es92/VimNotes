@@ -26,26 +26,42 @@ var dropbox_backend = {
 
     return {
       save(fdb) {
-        
+        return new Promise((resolve) => {
+          console.log('save');
+
+        });
       },
       load(default_fdb) {
-
-        dbx.filesDownload({path: path})
-        .then(function(response) {
-          var blob = response.fileBlob;
+        return new Promise((resolve) => {
+          dbx.filesDownload({path: path})
+          .then(function(response) {
+            var blob = response.fileBlob;
             var reader = new FileReader();
             reader.addEventListener("loadend", function() {
               console.log(reader.result);
               var buf = Array.from(new Uint8Array(reader.result));
-              console.log(buf.map((c) => String.fromCharCode(c)).join(''));
+              var string = buf.map((c) => String.fromCharCode(c)).join('')
+              try {
+                resolve(JSON.parse(string));
+              } catch {
+                resolve(null);
+              }
             });
             reader.readAsArrayBuffer(blob);
-            })
-        .catch(function(error) {
+          })
+          .catch(function(error) {
             console.log(error);
-            });
+            resolve(null);
+          });
 
-        return default_fdb;
+
+        }).then((file) => {
+          if (file != null) {
+            return file;
+          } else {
+            return default_fdb;
+          }
+        });
       },
     }
   }
@@ -95,7 +111,7 @@ var filedb = {
   },
 
   save(fdb, backend) {
-    backend.save(fdb);
+    return backend.save(fdb);
   },
 
   filenames(fdb) {

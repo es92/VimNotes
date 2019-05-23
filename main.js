@@ -40,7 +40,7 @@ window.onload = function(){
           var save_lpq = LPQ.init();
 
           function save_and_render() {
-            save_lpq.add((done) => {
+            LPQ.add(save_lpq, (done) => {
               filedb.save(fdb, backend).then(() => {
                 filesui.render_files(fdb);
                 done();
@@ -111,8 +111,7 @@ window.onload = function(){
                 vimjs.ww_bridge.on('eventfs_write', (path) => {
                   vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
                     filedb.writeFile(fdb, path, c);
-                    filedb.save(fdb, backend);
-                    filesui.render_files(fdb);
+                    save_and_render()
                   })
                 });
 
