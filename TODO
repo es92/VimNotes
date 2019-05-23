@@ -20,7 +20,7 @@
         10. load / save to external db
 ----      a. convert save/load to async
 ----      b. add dropbox w/ accesstoken
-          c. test unicode
+----      c. test unicode
           d. add authentication
         11. multiple windows editing different documents
         12. clipboard

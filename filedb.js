@@ -6,16 +6,25 @@ var dropbox_backend = {
 
     var path = '/fdb.db';
 
-
-
+    function ab2str(buf) {
+      return String.fromCharCode.apply(null, new Uint16Array(buf));
+    }
+    function str2ab(str) {
+      var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+      var bufView = new Uint16Array(buf);
+      for (var i=0, strLen=str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+      }
+      return buf;
+    }
 
     return {
       save(fdb) {
         return new Promise((resolve) => {
 
-          var buffer = JSON.stringify(fdb);
+          var buffer = str2ab(JSON.stringify(fdb));
 
-          dbx.filesUpload({path: path, contents: buffer, mode: 'overwrite'})
+          dbx.filesUpload({path: path, contents: buffer, mode: 'overwrite', mute: true })
           .then(function (response) {
             dbx.filesListFolder({path: ''})
             .then(function(response) {
@@ -37,10 +46,8 @@ var dropbox_backend = {
             var blob = response.fileBlob;
             var reader = new FileReader();
             reader.addEventListener("loadend", function() {
-              console.log(reader.result);
-              var buf = Array.from(new Uint8Array(reader.result));
-              var string = buf.map((c) => String.fromCharCode(c)).join('')
               try {
+                var string = ab2str(reader.result);
                 resolve(JSON.parse(string));
               } catch {
                 resolve(null);
