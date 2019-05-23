@@ -1,7 +1,80 @@
 
 
+var dropbox_backend = {
+  init() {
+    var dbx = new Dropbox.Dropbox({ accessToken: localStorage.accessToken });
+
+    var buffer = 'test_buf';
+
+    var path = '/fdb.db';
+
+    //dbx.filesUpload({path: path, contents: buffer})
+    //  .then(function (response) {
+    //      dbx.filesListFolder({path: ''})
+    //      .then(function(response) {
+    //          console.log(response);
+    //          })
+    //      .catch(function(error) {
+    //          console.log(error);
+    //          });
+    //      })
+    //.catch(function (error) {
+    //    console.error('dropbox error', error)
+    //    })
+
+
+
+    return {
+      save(fdb) {
+        
+      },
+      load(default_fdb) {
+
+        dbx.filesDownload({path: path})
+        .then(function(response) {
+          var blob = response.fileBlob;
+            var reader = new FileReader();
+            reader.addEventListener("loadend", function() {
+              console.log(reader.result);
+              var buf = Array.from(new Uint8Array(reader.result));
+              console.log(buf.map((c) => String.fromCharCode(c)).join(''));
+            });
+            reader.readAsArrayBuffer(blob);
+            })
+        .catch(function(error) {
+            console.log(error);
+            });
+
+        return default_fdb;
+      },
+    }
+  }
+
+}
+
+var localstorage_backend = {
+  init() {
+    return {
+      save(fdb) {
+        return new Promise((resolve) => {
+          localStorage.fdb = JSON.stringify(fdb);
+          resolve();
+        });
+      },
+      load(default_fdb) {
+        return new Promise((resolve) => {
+          let fdb = localStorage.fdb || JSON.stringify(default_fdb);
+          fdb = JSON.parse(fdb);
+          resolve(fdb);
+          return fdb;
+        });
+      },
+    }
+  }
+}
+
 var filedb = {
-  load_localstorage(user_vim_path) {
+  load(user_vim_path, backend) {
 
     var root_folderuid = Math.random()
     var default_files = {
@@ -18,13 +91,11 @@ var filedb = {
       root: root_folderuid,
     }
 
-    let fdb = localStorage.fdb || JSON.stringify(default_fdb);
-    fdb = JSON.parse(fdb);
-    return fdb;
+    return backend.load(default_fdb);
   },
 
-  save_localstorage(fdb) {
-    localStorage.fdb = JSON.stringify(fdb);
+  save(fdb, backend) {
+    backend.save(fdb);
   },
 
   filenames(fdb) {

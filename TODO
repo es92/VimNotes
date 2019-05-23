@@ -18,6 +18,47 @@
 ----      d. drag folders
 ----    9. drag items to trash to delete
         10. load / save to external db
+----      a. convert save/load to async
+          b. add dropbox w/ accesstoken
+          c. test unicode
+          d. add authentication
+        11. multiple windows editing different documents
+        12. clipboard
+        13. fix graphical issues
+        14. add alternative editor for mobile
+        15. add encryption
+        16. offline support
+        17. redo delete file so it works on mobile
+
+========================================================
+
+see filedb:3 (dropbox needs implementing)
+  - thoughts: 
+    - db save/load must be async
+    - need to test unicode
+    - need to setup authentication
+
+========================================================
+
+----    1. load file on launch
+----    2. save file on events
+----      a. hook up events
+----      b. write file to localstorage
+----    3. add gui
+----    4. show file on click
+----    5. autosave edited files
+----      a. create random filename on launch
+----      b. autosave on edit
+----      c. display first nonempty lines in list
+----    6. support custom vimrc
+----    7. sort by timestamp
+----    8. load / saving folders
+----      a. basic functionality
+----      c. drag files
+----      d. drag folders
+----    9. drag items to trash to delete
+        10. load / save to external db
+          a. implement dropbox
         11. multiple windows editing different documents
         12. clipboard
         13. fix graphical issues
