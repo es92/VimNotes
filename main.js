@@ -39,12 +39,13 @@ window.onload = function(){
             vimjs.enter_string(CMD_STR + 'e ' + fname + "\n");
           }
 
+          let paste_cb = null;
+
           function set_paste(str) {
-            vimjs.enter_string(CMD_STR + 'let @@ = ');
-            try {
-              var escstr = JSON.stringify(str);
-              vimjs.enter_string(escstr + '\n');
-            } catch(e){ }
+            vimjs.FS.writeFile('/home/web_user/data/paste_buffer', str);
+            paste_cb = () => {
+              vimjs.enter_string(CMD_STR + '| let @@ = join(readfile("/home/web_user/data/paste_buffer"), "\\n")\n');
+            }
           }
 
           let copy_cb = null;
@@ -157,6 +158,12 @@ window.onload = function(){
                       vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
                         copy_cb1(c);
                       });
+                    }
+                  } else if (path === '/home/web_user/data/paste_buffer') {
+                    if (paste_cb != null) {
+                      let paste_cb1 = paste_cb;
+                      paste_cb = null;
+                      paste_cb1();
                     }
                   } else {
                     vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
