@@ -1,5 +1,20 @@
 ========================================================
 
+       1. clipboard
+----     a. write
+----     b. read
+         c. support multiline copy/paste
+         d. support special characters "
+       2. multiple windows editing different documents
+       3. fix graphical issues
+       4. add alternative editor for mobile
+       5. add encryption
+       6. offline support
+       7. redo delete file so it works on mobile
+
+
+========================================================
+
 ----    1. load file on launch
 ----    2. save file on events
 ----      a. hook up events
@@ -17,7 +32,7 @@
 ----      c. drag files
 ----      d. drag folders
 ----    9. drag items to trash to delete
-        10. load / save to external db
+----    10. load / save to external db
 ----      a. convert save/load to async
 ----      b. add dropbox w/ accesstoken
 ----      c. test unicode

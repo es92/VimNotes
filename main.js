@@ -14,6 +14,7 @@ window.onload = function(){
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "/vimrc", true);
+
   xhr.onload = function (e) {
     var vimjs = new VimJS_WW('es-vim.js/web/vim_ww.js');
     vimjs.load(function(start){
@@ -36,6 +37,21 @@ window.onload = function(){
 
           function open(fname) {
             vimjs.enter_string(CMD_STR + 'e ' + fname + "\n");
+          }
+
+          function set_paste(str) {
+            vimjs.enter_string(CMD_STR + 'let @@ = ');
+            try {
+              var escstr = JSON.stringify(str);
+              vimjs.enter_string(escstr + '\n');
+            } catch(e){ }
+          }
+
+          let copy_cb = null;
+
+          function read_buffer(done) {
+            vimjs.enter_string(CMD_STR + "call writefile(split(@@, \"\\n\", 1), \"/home/web_user/data/yank_buffer\")\n");
+            copy_cb = done
           }
 
           var save_lpq = LPQ.init();
@@ -107,6 +123,20 @@ window.onload = function(){
           });
 
           var canvas = document.getElementsByTagName('canvas')[0];
+
+          canvas.addEventListener('keydown', (e) => {
+            if (e.key === 'c' && e.ctrlKey) {
+              read_buffer((c) => {
+                window.prompt("Copy to clipboard", c);
+              });
+            } else if (e.key === 'v' && e.ctrlKey) { 
+              var out = window.prompt("Enter text");
+              if (out != null) {
+                set_paste(out);
+              }
+            }
+          });
+
           var vc = new VimCanvas(vimjs, canvas);
           window.vc = vc;
 
@@ -120,10 +150,20 @@ window.onload = function(){
                 finishInit();
 
                 vimjs.ww_bridge.on('eventfs_write', (path) => {
-                  vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
-                    filedb.writeFile(fdb, path, c);
-                    save_and_render()
-                  })
+                  if (path === '/home/web_user/data/yank_buffer' ){
+                    if (copy_cb != null) {
+                      let copy_cb1 = copy_cb;
+                      copy_cb = null;
+                      vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
+                        copy_cb1(c);
+                      });
+                    }
+                  } else {
+                    vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
+                      filedb.writeFile(fdb, path, c);
+                      save_and_render()
+                    })
+                  }
                 });
 
               }
