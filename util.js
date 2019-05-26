@@ -11,7 +11,7 @@ var LPQ = {
   set_on_done(lpq, on_done) {
     lpq.on_done = on_done;
   },
-  add(lpq, fn) {
+  add(lpq, fn, take_last) {
     var finished = () => {
       if (lpq.todo.length == 0) {
         lpq.running = false;
@@ -19,7 +19,12 @@ var LPQ = {
           lpq.on_done();
         }
       } else {
-        lpq.todo.shift()(finished);
+        if (take_last) {
+          lpq.todo.pop()(finished);
+          lpq.todo = [];
+        } else {
+          lpq.todo.shift()(finished);
+        }
       }
     }
 

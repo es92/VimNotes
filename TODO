@@ -22,7 +22,7 @@
 ----      b. add dropbox w/ accesstoken
 ----      c. test unicode
 ----      d. add authentication
-          e. remove double upload (cancel earlier uploads if there's a later one)
+----      e. remove double upload (cancel earlier uploads if there's a later one)
         11. multiple windows editing different documents
         12. clipboard
         13. fix graphical issues

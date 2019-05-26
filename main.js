@@ -46,17 +46,17 @@ window.onload = function(){
 
           function save_and_render() {
             filesui.render_files(fdb);
-            console.log('UPLOADING');
             window.onbeforeunload = function() {
               return true;
             }
 
             network_div.classList.add('active');
+            let take_last = true;
             LPQ.add(save_lpq, (done) => {
               filedb.save(fdb, backend).then(() => {
                 done();
               });
-            });
+            }, take_last);
           }
 
           filesui.e.on('change', (fname) => {
