@@ -41,18 +41,14 @@ window.onload = function(){
 
           let paste_cb = null;
 
-          function set_paste(str) {
+          function set_paste(str, after) {
             vimjs.FS.writeFile('/home/web_user/data/paste_buffer', str);
             paste_cb = () => {
               vimjs.enter_string(CMD_STR + '| let @@ = join(readfile("/home/web_user/data/paste_buffer"), "\\n")\n');
+              if (after != null) {
+                after();
+              }
             }
-          }
-
-          let copy_cb = null;
-
-          function read_buffer(done) {
-            vimjs.enter_string(CMD_STR + "call writefile(split(@@, \"\\n\", 1), \"/home/web_user/data/yank_buffer\")\n");
-            copy_cb = done
           }
 
           var save_lpq = LPQ.init();
@@ -125,17 +121,24 @@ window.onload = function(){
 
           var canvas = document.getElementsByTagName('canvas')[0];
 
-          canvas.addEventListener('keydown', (e) => {
-            if (e.key === 'c' && e.ctrlKey) {
-              read_buffer((c) => {
-                window.prompt("Copy to clipboard", c);
-              });
-            } else if (e.key === 'v' && e.ctrlKey) { 
-              var out = window.prompt("Enter text");
-              if (out != null) {
-                set_paste(out);
-              }
-            }
+          canvas.addEventListener("paste", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let paste = (event.clipboardData || window.clipboardData).getData('text');
+            set_paste(paste, () => {
+              vimjs.enter_string(CMD_STR + 'echo "copied from clipboard"\n');
+              setTimeout(() => {
+                vimjs.enter_string(CMD_STR + 'call feedkeys("\\<C-v>")\n');
+              }, 500);
+            });
+          });
+
+          let last_yank = '';
+
+          canvas.addEventListener("copy", function(e) {
+            e.clipboardData.setData('text/plain', last_yank);
+            vimjs.enter_string(CMD_STR + 'echo "copied to clipboard"\n');
+            e.preventDefault();
           });
 
           var vc = new VimCanvas(vimjs, canvas);
@@ -152,13 +155,9 @@ window.onload = function(){
 
                 vimjs.ww_bridge.on('eventfs_write', (path) => {
                   if (path === '/home/web_user/data/yank_buffer' ){
-                    if (copy_cb != null) {
-                      let copy_cb1 = copy_cb;
-                      copy_cb = null;
-                      vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
-                        copy_cb1(c);
-                      });
-                    }
+                    vimjs.FS.readFile(path, { encoding: 'utf8' }, (c) => { 
+                      last_yank = c;
+                    });
                   } else if (path === '/home/web_user/data/paste_buffer') {
                     if (paste_cb != null) {
                       let paste_cb1 = paste_cb;

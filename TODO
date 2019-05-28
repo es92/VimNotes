@@ -1,9 +1,9 @@
 ========================================================
 
-       1. clipboard
+----   1. clipboard
 ----     a. write
 ----     b. read
-         c. support multiline copy/paste
+----     c. support multiline copy/paste
 ----     d. support special characters "
        2. multiple windows editing different documents
        3. fix graphical issues
