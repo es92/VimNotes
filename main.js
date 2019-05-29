@@ -66,7 +66,10 @@ window.onload = function(){
             network_div.classList.add('active');
             let take_last = true;
             LPQ.add(save_lpq, (done) => {
-              filedb.save(fdb, backend).then(() => {
+              filedb.save(fdb, backend).then((rerender) => {
+                if (rerender) {
+                  filesui.render_files(fdb);
+                }
                 done();
               });
             }, take_last);

@@ -18,6 +18,7 @@ function init_dropbox() {
   }
 }
 
+// http://dropbox.github.io/dropbox-sdk-js/Dropbox.html
 
 var dropbox_backend = {
   init() {
@@ -38,55 +39,66 @@ var dropbox_backend = {
       return buf;
     }
 
+    function read() {
+      return dbx.filesDownload({path: path})
+      .then(function(response) {
+        var blob = response.fileBlob;
+        var reader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+          reader.addEventListener("loadend", function() {
+            try {
+              var string = ab2str(reader.result);
+              resolve(JSON.parse(string));
+            } catch {
+              reject();
+            }
+          });
+          reader.readAsArrayBuffer(blob);
+        });
+      })
+    }
+
+    function write(fdb, resolve) {
+      var buffer = str2ab(JSON.stringify(fdb));
+      dbx.filesUpload({path: path, contents: buffer, mode: 'overwrite', mute: true })
+      .then(function (response) {
+        resolve();
+      })
+      .catch(function (error) {
+        console.error('dropbox error', error)
+        resolve();
+      })
+    }
+
     return {
       save(fdb) {
         return new Promise((resolve) => {
 
-          var buffer = str2ab(JSON.stringify(fdb));
-
-          dbx.filesUpload({path: path, contents: buffer, mode: 'overwrite', mute: true })
-          .then(function (response) {
-            dbx.filesListFolder({path: ''})
-            .then(function(response) {
-              resolve();
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
+          read()
+          .then((existing) => {
+            if (JSON.stringify(existing) !== JSON.stringify(fdb)) {
+              write(filedb.merge(fdb, JSON.parse(JSON.stringify(existing))), () => resolve(true));
+            } else {
+              write(fdb, () => resolve(false));
+            }
           })
-          .catch(function (error) {
-            console.error('dropbox error', error)
-          })
+          .catch((error) => {
+            console.error(error);
+            write(fdb, () => resolve(true));
+          });
         });
       },
       load(default_fdb) {
         return new Promise((resolve) => {
-          dbx.filesDownload({path: path})
+          read()
           .then(function(response) {
-            var blob = response.fileBlob;
-            var reader = new FileReader();
-            reader.addEventListener("loadend", function() {
-              try {
-                var string = ab2str(reader.result);
-                resolve(JSON.parse(string));
-              } catch {
-                resolve(null);
-              }
-            });
-            reader.readAsArrayBuffer(blob);
+            resolve(response);
           })
           .catch(function(error) {
-            console.log(error);
-            resolve(null);
+            console.error(error);
+            resolve(default_fdb);
           });
-
-
-        }).then((file) => {
-          if (file != null) {
-            return file;
-          } else {
-            return default_fdb;
-          }
         });
       },
     }

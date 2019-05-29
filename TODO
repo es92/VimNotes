@@ -1,5 +1,27 @@
 ========================================================
 
+       0. host + start using it
+          - checkout certbot-nginx for archlinux
+       1. multiple windows editing different documents
+----      a. check if diff during save, add any missing files
+          b. merge any files edited on both machines
+          c. delete files if any deleted
+       2. add alternative editor for mobile
+       3. add encryption
+       4. offline support
+       5. redo delete file so it works on mobile
+       6. versioning
+       7. polish
+        - C-v (visual block) annoying rn
+        - sometimes text "sticks" to bottom of window
+        - window not using full height
+        - gray boxes around letters
+        - summary too long
+        - smartindent not working
+        - visual block does not support blockwise operators (see +visualextra)
+
+========================================================
+
 ----   1. clipboard
 ----     a. write
 ----     b. read

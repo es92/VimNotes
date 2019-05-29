@@ -127,4 +127,50 @@ var filedb = {
     fdb.folders[src].parent = folderuid;
   },
 
+  merge(self, other) {
+    let self_files = new Set(Object.keys(self.files));
+    let self_folders = new Set(Object.keys(self.folders));
+
+    let other_files = new Set(Object.keys(other.files));
+    let other_folders = new Set(Object.keys(other.folders));
+
+    let self_only_files = [...self_files].filter((s) => !other_files.has(s))
+    let other_only_files = [...other_files].filter((s) => !self_files.has(s))
+
+    let self_only_folders = [...self_folders].filter((s) => !other_folders.has(s))
+    let other_only_folders = [...other_folders].filter((s) => !self_folders.has(s))
+
+    let changed_files = [...self_files].filter((s) => JSON.stringify(self.files[s]) !== JSON.stringify(other.files[s]));
+    let changed_folders = [...self_files].filter((s) => JSON.stringify(self.folders[s]) !== JSON.stringify(other.folders[s]));
+
+    other_only_files.forEach((s) => {
+      // 1. the file was created remotely
+      self.files[s] = other.files[s];
+      // 2. the file was deleted locally
+    });
+
+    other_only_folders.forEach((s) => {
+      self.folders[s] = other.folders[s];
+    });
+
+    self_only_files.forEach((s) => {
+      console.log('nyi');
+    });
+
+    self_only_folders.forEach((s) => {
+      console.log('nyi');
+    });
+
+    changed_files.forEach((s) => {
+      console.log('nyi');
+    });
+
+    changed_folders.forEach((s) => {
+      console.log('nyi');
+    });
+
+
+    return self;
+  },
+
 }
