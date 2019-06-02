@@ -144,29 +144,45 @@ var filedb = {
     let changed_folders = [...self_files].filter((s) => JSON.stringify(self.folders[s]) !== JSON.stringify(other.folders[s]));
 
     other_only_files.forEach((s) => {
-      // 1. the file was created remotely
-      self.files[s] = other.files[s];
-      // 2. the file was deleted locally
+      const file_created_since_sync = self.sync_time <= other.files[s].last_edit;
+      if (file_created_since_sync) {
+        self.files[s] = other.files[s];
+      }
     });
 
     other_only_folders.forEach((s) => {
-      self.folders[s] = other.folders[s];
+      const folder_created_since_sync = self.sync_time <= other.folders[s].last_edit;
+      if (folder_created_since_sync) {
+        self.folders[s] = other.folders[s];
+      }
     });
 
     self_only_files.forEach((s) => {
-      console.log('nyi');
+      const file_created_since_sync = self.sync_time <= self.files[s].last_edit;
+      if (!file_created_since_sync) {
+        delete self.files[s];
+      }
     });
 
     self_only_folders.forEach((s) => {
-      console.log('nyi');
+      const folder_created_since_sync = self.sync_time <= self.folders[s].last_edit;
+      if (!folder_created_since_sync) {
+        delete self.folders[s];
+      }
     });
 
     changed_files.forEach((s) => {
-      console.log('nyi');
+      let could_be_conflict = other.files[s].last_edit >= self.sync_time;
+      if (could_be_conflict) {
+        console.log('nyi');
+      }
     });
 
     changed_folders.forEach((s) => {
-      console.log('nyi');
+      let could_be_conflict = other.folders[s].last_edit >= self.sync_time;
+      if (could_be_conflict) {
+        console.log('nyi');
+      }
     });
 
 

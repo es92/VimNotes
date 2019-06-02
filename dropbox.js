@@ -63,6 +63,7 @@ var dropbox_backend = {
       var buffer = str2ab(JSON.stringify(fdb));
       dbx.filesUpload({path: path, contents: buffer, mode: 'overwrite', mute: true })
       .then(function (response) {
+        fdb.sync_time = Date.now();
         resolve();
       })
       .catch(function (error) {
@@ -74,18 +75,16 @@ var dropbox_backend = {
     return {
       save(fdb) {
         return new Promise((resolve) => {
-
           read()
           .then((existing) => {
             if (JSON.stringify(existing) !== JSON.stringify(fdb)) {
               write(filedb.merge(fdb, JSON.parse(JSON.stringify(existing))), () => resolve(true));
             } else {
-              write(fdb, () => resolve(false));
+              resolve(false);
             }
           })
           .catch((error) => {
-            console.error(error);
-            write(fdb, () => resolve(true));
+            resolve(false);
           });
         });
       },
@@ -93,10 +92,12 @@ var dropbox_backend = {
         return new Promise((resolve) => {
           read()
           .then(function(response) {
+            response.sync_time = Date.now();
             resolve(response);
           })
           .catch(function(error) {
             console.error(error);
+            default_fdb.sync_time = Date.now();
             resolve(default_fdb);
           });
         });
