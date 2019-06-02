@@ -4,7 +4,9 @@
           - checkout certbot-nginx for archlinux
 ----   1. multiple windows editing different documents
        2. add alternative editor for mobile
+        - https://ace.c9.io/
        3. add encryption
+        - https://github.com/rndme/aes4js
        4. offline support
        5. redo delete file so it works on mobile
        6. versioning
