@@ -140,8 +140,11 @@ var filedb = {
     let self_only_folders = [...self_folders].filter((s) => !other_folders.has(s))
     let other_only_folders = [...other_folders].filter((s) => !self_folders.has(s))
 
-    let changed_files = [...self_files].filter((s) => JSON.stringify(self.files[s]) !== JSON.stringify(other.files[s]));
-    let changed_folders = [...self_files].filter((s) => JSON.stringify(self.folders[s]) !== JSON.stringify(other.folders[s]));
+    let both_files = [...self_files].filter((s) => other_files.has(s));
+    let both_folders = [...self_folders].filter((s) => other_folders.has(s));
+
+    let changed_files = [...both_files].filter((s) => JSON.stringify(self.files[s]) !== JSON.stringify(other.files[s]));
+    let changed_folders = [...both_folders].filter((s) => JSON.stringify(self.folders[s]) !== JSON.stringify(other.folders[s]));
 
     other_only_files.forEach((s) => {
       const file_created_since_sync = self.sync_time <= other.files[s].last_edit;
@@ -204,6 +207,7 @@ var filedb = {
         self.folders[s].last_edit = Date.now();
       }
     });
+
 
     return self;
   },

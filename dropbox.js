@@ -84,6 +84,7 @@ var dropbox_backend = {
             }
           })
           .catch((error) => {
+            console.error('dropbox error', error);
             resolve(false);
           });
         });
