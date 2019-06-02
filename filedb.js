@@ -171,20 +171,39 @@ var filedb = {
       }
     });
 
+    var merge = (a, b) => {
+      var dmp = new diff_match_patch();
+      var diff = dmp.diff_main(a, b);
+      if (diff.length > 2) {
+        dmp.diff_cleanupSemantic(diff);
+      }
+      var patch_list = dmp.patch_make(a, b, diff);
+      var patch_text = dmp.patch_toText(patch_list);
+      var patches = dmp.patch_fromText(patch_text);
+      var results = dmp.patch_apply(patches, a);
+      return results[0];
+    }
+
+
     changed_files.forEach((s) => {
       let could_be_conflict = other.files[s].last_edit >= self.sync_time;
       if (could_be_conflict) {
-        console.log('nyi');
+        const newer = other.files[s].last_edit < self.files[s].last_edit ? other : self;
+        const older = other.files[s].last_edit < self.files[s].last_edit ? self : other;
+        self.files[s].contents = merge(newer.files[s].contents, older.files[s].contents);
+        self.files[s].last_edit = Date.now();
       }
     });
 
     changed_folders.forEach((s) => {
       let could_be_conflict = other.folders[s].last_edit >= self.sync_time;
       if (could_be_conflict) {
-        console.log('nyi');
+        const newer = other.folders[s].last_edit < self.folders[s].last_edit ? other : self;
+        const older = other.folders[s].last_edit < self.folders[s].last_edit ? self : other;
+        self.folders[s].name = merge(newer.folders[s].name, older.folders[s].name);
+        self.folders[s].last_edit = Date.now();
       }
     });
-
 
     return self;
   },

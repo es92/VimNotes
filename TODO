@@ -2,10 +2,7 @@
 
        0. host + start using it
           - checkout certbot-nginx for archlinux
-       1. multiple windows editing different documents
-----      a. check if diff during save, add any missing files
-          b. merge any files edited on both machines
-----      c. delete files if any deleted
+----   1. multiple windows editing different documents
        2. add alternative editor for mobile
        3. add encryption
        4. offline support
