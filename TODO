@@ -16,6 +16,7 @@
         - summary too long
         - smartindent not working
         - visual block does not support blockwise operators (see +visualextra)
+        - more tests merging notes
 
 ========================================================
 
