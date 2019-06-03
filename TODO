@@ -1,7 +1,7 @@
 ========================================================
 
-       0. host + start using it
-          - checkout certbot-nginx for archlinux
+----   0. host + start using it
+----      - checkout certbot-nginx for archlinux
 ----   1. multiple windows editing different documents
        2. add alternative editor for mobile
         - move vim into editor wrapper

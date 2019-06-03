@@ -13,7 +13,7 @@ function init_dropbox() {
     return getAccessTokenFromUrl();
   } else {
     var dbx = new Dropbox.Dropbox({ clientId: 'bhkcoctaxu3rlkg' });
-    var authUrl = dbx.getAuthenticationUrl('http://localhost:8080/');
+    var authUrl = dbx.getAuthenticationUrl(window.location.href);
     window.open(authUrl, '_self');
   }
 }
