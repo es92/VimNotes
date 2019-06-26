@@ -146,7 +146,6 @@ window.onload = function(){
 
           let last_scroll = Date.now();
           canvas.addEventListener('wheel', (e) => {
-            console.log(e.deltaY, last_scroll);
             if (Date.now() - last_scroll > 20) {
               if (e.deltaY > 0) {
                 vimjs.enter_string(CMD_STR + 'call feedkeys("\\<C-e>")\n');
