@@ -30,10 +30,10 @@
         - visual block does not support blockwise operators (see +visualextra)
         - more tests merging notes
         - delete note on empty
-----    - save less frequently (on note change, on exit, onmove mouse, on longer delay between last keypress)
+        - save less frequently (on note change, on exit, onmove mouse, on longer delay between last keypress)
         - go to char on mousepress (click -> offset, command to go to line, char)
         - summary put second line on smaller newline
-        - macros broken
+        - verify macros on osx
         - scrolling support
 ----    - remove sync icon its annoying
 

@@ -144,6 +144,10 @@ window.onload = function(){
             e.preventDefault();
           });
 
+          //canvas.addEventListener('mousewheel', (e) => {
+          //  console.log(e);
+          //});
+
           var vc = new VimCanvas(vimjs, canvas);
           window.vc = vc;
 

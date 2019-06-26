@@ -1,5 +1,5 @@
 
-set updatetime=1000
+set updatetime=250
 
 autocmd CursorHold * update
 autocmd CursorHold,CursorHoldI * update
