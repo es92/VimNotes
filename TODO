@@ -3,13 +3,22 @@
 ----   0. host + start using it
 ----      - checkout certbot-nginx for archlinux
 ----   1. multiple windows editing different documents
-       2. add alternative editor for mobile
+       2. add alternative editor for tablet
         - move vim into editor wrapper
-        - https://ace.c9.io/
+        - make separate demo of ace to see if the right choice
+          - https://ace.c9.io/
        3. add encryption
+        - decide on ux
+          - lock button
+            - if nothing locked, enter password
+            - if somtehing locked, verify pw
+          - lock indicator (locked | unlocked state)
+          - click locked item triggers prompt
         - https://github.com/rndme/aes4js
        4. offline support
-       5. redo delete file so it works on mobile
+       5. redo ui for mobile
+        - two page ui
+        - ace editor?
        6. versioning
        7. polish
         - C-v (visual block) annoying rn
@@ -20,6 +29,14 @@
         - smartindent not working
         - visual block does not support blockwise operators (see +visualextra)
         - more tests merging notes
+        - delete note on empty
+----    - save less frequently (on note change, on exit, onmove mouse, on longer delay between last keypress)
+        - go to char on mousepress (click -> offset, command to go to line, char)
+        - summary put second line on smaller newline
+        - macros broken
+        - scrolling support
+----    - remove sync icon its annoying
+
 
 ========================================================
 

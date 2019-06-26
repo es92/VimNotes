@@ -36,7 +36,7 @@ window.onload = function(){
           filesui.render_files(fdb);
 
           function open(fname) {
-            vimjs.enter_string(CMD_STR + 'e ' + fname + "\n");
+            vimjs.enter_string(CMD_STR + 'w | e ' + fname + "\n");
           }
 
           let paste_cb = null;

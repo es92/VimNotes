@@ -39,6 +39,10 @@ canvas {
 
 /* ================================= */
 
+.network {
+  display: none;
+}
+
 .files {
   width: 20rem;
   height: 100%;
