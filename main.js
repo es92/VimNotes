@@ -144,9 +144,18 @@ window.onload = function(){
             e.preventDefault();
           });
 
-          //canvas.addEventListener('mousewheel', (e) => {
-          //  console.log(e);
-          //});
+          let last_scroll = Date.now();
+          canvas.addEventListener('wheel', (e) => {
+            console.log(e.deltaY, last_scroll);
+            if (Date.now() - last_scroll > 20) {
+              if (e.deltaY > 0) {
+                vimjs.enter_string(CMD_STR + 'call feedkeys("\\<C-e>")\n');
+              } else {
+                vimjs.enter_string(CMD_STR + 'call feedkeys("\\<C-y>")\n');
+              }
+            }
+            last_scroll = Date.now();
+          });
 
           var vc = new VimCanvas(vimjs, canvas);
           window.vc = vc;

@@ -13,7 +13,27 @@ function make_files(files_div, selected_file, root_folder) {
       return 'empty';
     }
     contents = contents.replace(/^\s*[\r\n]/gm, '');
-    return contents.split('\n').slice(0,2).join('\n');
+    contents = contents.split('\n').slice(0,2)
+    contents = contents.map((c) => {
+      if (c.length > 33) {
+        return c.slice(0, 30) + '...';
+      } else {
+        return c;
+      }
+    });
+    let s = document.createElement('div');
+    let s0 = document.createElement('div');
+    s0.classList.add('summary-header');
+    s0.innerText = contents[0];
+    s.appendChild(s0);
+
+    if (contents.length > 1) {
+      let s1 = document.createElement('div');
+      s1.innerText = contents[1];
+      s1.classList.add('summary-sub');
+      s.appendChild(s1);
+    }
+    return s;
 
   }
   
@@ -199,15 +219,19 @@ function make_files(files_div, selected_file, root_folder) {
     function make_folderdiv(fuid, div) {
       function make_listfile(fname) {
         var div = document.createElement('div');
-        div.innerHTML = summary(filedb.contents(fdb, fname));
+        div.appendChild(summary(filedb.contents(fdb, fname)));
         div.fname = fname;
         if (fname == selected_file) {
           div.classList.add('selected');
         }
         div.onclick = function(e) {
-          console.log('change', e.target.fname);
-          selected_file = e.target.fname;
-          o.e.emit('change', e.target.fname);
+          target = e.target;
+          while (target.fname == null) {
+            target = target.parentElement;
+          }
+          console.log('change', target.fname);
+          selected_file = target.fname;
+          o.e.emit('change', target.fname);
           render_files(fdb);
         }
         div.classList.add('list-elem');
@@ -223,7 +247,8 @@ function make_files(files_div, selected_file, root_folder) {
         var div = document.createElement('div');
         var title = document.createElement('div');
         title.contentEditable = true;
-        title.innerHTML = summary(fname);
+        var summary_elem = summary(fname);
+        title.innerText = summary_elem.firstChild.innerText;
 
         title.onblur = () => {
           o.e.emit('change_folder_name', uid, title.innerHTML);
